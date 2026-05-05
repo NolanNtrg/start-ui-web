@@ -8,12 +8,12 @@ steps:
     commands:
       - |
         TITLE="$CI_COMMIT_TITLE"
-        PATTERN='^(feat|fix|chore|ci|test|docs|revert|perf|build|style|refactor)(\(.+\))?: .+$'
+        PATTERN='^(feat|fix|chore|test|docs)(\(.+\))?: .+$'
 
         if ! echo "$TITLE" | grep -qE "$PATTERN"; then
           echo "❌ PR title '$TITLE' does not match the required pattern."
           echo ""
-          echo "Expected: (feat|fix|chore|ci|test|docs|revert|perf|build|style|refactor)(<scope>)?: <description>"
+          echo "Expected: (feat|fix|chore|test|docs)(<scope>)?: <description>"
           echo ""
           echo "Examples:"
           echo "  feat: add login page"
