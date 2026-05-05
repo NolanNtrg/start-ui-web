@@ -80,9 +80,10 @@ steps:
         done
         sleep 3
         echo "Postgres is ready."
+      - pnpm build
       - pnpm db:push
       - pnpm db:seed
-      - SKIP_ENV_VALIDATION=true pnpm dev &
+      - pnpm start &
       - |
         echo "Waiting for app server..."
         timeout=120
