@@ -89,7 +89,7 @@ steps:
           fi
         done
         echo "Nitro ready (status: $status)"
-      - CI= pnpm e2e
+      - PLAYWRIGHT_REUSE_SERVER=true pnpm e2e
 
   - name: cleanup
     image: docker:cli

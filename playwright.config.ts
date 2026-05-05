@@ -62,7 +62,7 @@ export default defineConfig({
   webServer: {
     command: 'pnpm dev',
     url: process.env.VITE_BASE_URL,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: !process.env.CI || !!process.env.PLAYWRIGHT_REUSE_SERVER,
     timeout: 3 * 60 * 1000,
   },
 });
