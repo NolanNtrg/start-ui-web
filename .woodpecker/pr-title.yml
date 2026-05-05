@@ -1,0 +1,26 @@
+when:
+  - event: pull_request
+    branch: [main]
+
+steps:
+  - name: check-pr-title
+    image: alpine:3.19
+    commands:
+      - |
+        TITLE="$CI_COMMIT_TITLE"
+        PATTERN='^(feat|fix|chore|test|docs)(\(.+\))?: .+$'
+
+        if ! echo "$TITLE" | grep -qE "$PATTERN"; then
+          echo "❌ PR title '$TITLE' does not match the required pattern."
+          echo ""
+          echo "Expected: (feat|fix|chore|test|docs)(<scope>)?: <description>"
+          echo ""
+          echo "Examples:"
+          echo "  feat: add login page"
+          echo "  fix(auth): token expiry"
+          echo "  chore: drop legacy api"
+          echo "  docs(readme): update install guide"
+          exit 1
+        fi
+
+        echo "✅ PR title '$TITLE' is valid."
