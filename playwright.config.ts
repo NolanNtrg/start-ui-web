@@ -60,9 +60,9 @@ export default defineConfig({
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'pnpm dev',
+    command: 'SKIP_ENV_VALIDATION=true pnpm dev',
     url: process.env.VITE_BASE_URL,
-    reuseExistingServer: !process.env.CI || !!process.env.PLAYWRIGHT_REUSE_SERVER,
-    timeout: 3 * 60 * 1000,
+    reuseExistingServer: !process.env.CI,
+    timeout: 5 * 60 * 1000,
   },
 });

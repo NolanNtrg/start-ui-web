@@ -74,22 +74,7 @@ steps:
         mc anonymous set download minio/$S3_BUCKET_NAME
       - pnpm db:push
       - pnpm db:seed
-      - SKIP_ENV_VALIDATION=true pnpm dev > /tmp/dev-server.log 2>&1 &
-      - |
-        echo "Waiting for Nitro to compile..."
-        timeout=180
-        until status=$(curl -s -o /dev/null -w '%{http_code}' $VITE_BASE_URL 2>/dev/null) && \
-              [ "$status" != "503" ] && [ "$status" != "000" ]; do
-          sleep 3
-          timeout=$((timeout - 3))
-          if [ $timeout -le 0 ]; then
-            echo "=== dev server log ==="
-            cat /tmp/dev-server.log
-            echo "Nitro timed out" && exit 1
-          fi
-        done
-        echo "Nitro ready (status: $status)"
-      - PLAYWRIGHT_REUSE_SERVER=true pnpm e2e
+      - pnpm e2e
 
   - name: cleanup
     image: docker:cli
