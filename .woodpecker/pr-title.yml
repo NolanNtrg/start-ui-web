@@ -7,13 +7,13 @@ steps:
     image: alpine:3.19
     commands:
       - |
-        TITLE="${CI_COMMIT_PULL_REQUEST_TITLE:-$CI_COMMIT_TITLE}"
-        PATTERN='^(feat|fix|chore|test|docs)(\(.+\))?: .+$'
+        TITLE="$CI_COMMIT_TITLE"
+        PATTERN='^(feat|fix|chore|ci|test|docs|revert|perf|build|style|refactor)(\(.+\))?: .+$'
 
         if ! echo "$TITLE" | grep -qE "$PATTERN"; then
           echo "❌ PR title '$TITLE' does not match the required pattern."
           echo ""
-          echo "Expected: (feat|fix|chore|test|docs)(<scope>)?: <description>"
+          echo "Expected: (feat|fix|chore|ci|test|docs|revert|perf|build|style|refactor)(<scope>)?: <description>"
           echo ""
           echo "Examples:"
           echo "  feat: add login page"
