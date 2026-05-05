@@ -1,0 +1,50 @@
+when:
+  - event: pull_request
+    branch: [main]
+
+steps:
+  - name: install
+    image: node:24
+    environment:
+      TMPDIR: /tmp
+    volumes:
+      - /var/lib/woodpecker-cache/pnpm:/var/lib/woodpecker-cache/pnpm
+    commands:
+      - git config --global --add safe.directory "$CI_WORKSPACE"
+      - corepack enable
+      - corepack prepare pnpm@10.33.2 --activate
+      - pnpm config set store-dir /var/lib/woodpecker-cache/pnpm
+      - pnpm install
+
+  - name: linter
+    image: node:24
+    depends_on: [install]
+    environment:
+      TMPDIR: /tmp
+    commands:
+      - corepack enable
+      - corepack prepare pnpm@10.33.2 --activate
+      - pnpm oxlint --deny-warnings .
+
+  - name: typescript-checker
+    image: node:24
+    depends_on: [install]
+    environment:
+      TMPDIR: /tmp
+    commands:
+      - corepack enable
+      - corepack prepare pnpm@10.33.2 --activate
+      - pnpm run lint:ts
+
+  - name: tests
+    image: mcr.microsoft.com/playwright:v1.58.0-noble
+    depends_on: [install]
+    environment:
+      TMPDIR: /tmp
+      VITE_BASE_URL: http://localhost:3000
+      VITE_S3_BUCKET_PUBLIC_URL: http://localhost:9000/default
+    commands:
+      - git config --global --add safe.directory "$CI_WORKSPACE"
+      - corepack enable
+      - corepack prepare pnpm@10.33.2 --activate
+      - SKIP_ENV_VALIDATION=true pnpm run test:ci

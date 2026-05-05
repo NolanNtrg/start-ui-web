@@ -1,0 +1,27 @@
+when:
+  - event: push
+    branch: [main]
+
+clone:
+  git:
+    image: woodpeckerci/plugin-git
+    settings:
+      partial: false
+      tags: true
+
+steps:
+  - name: release
+    image: node:24
+    volumes:
+      - /var/lib/woodpecker-cache/pnpm:/var/lib/woodpecker-cache/pnpm
+    environment:
+      TMPDIR: /tmp
+      GITHUB_TOKEN:
+        from_secret: github_token
+    commands:
+      - git config --global --add safe.directory "$CI_WORKSPACE"
+      - corepack enable
+      - corepack prepare pnpm@10.33.2 --activate
+      - pnpm config set store-dir /var/lib/woodpecker-cache/pnpm
+      - pnpm install
+      - pnpm exec semantic-release

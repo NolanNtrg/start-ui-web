@@ -63,5 +63,6 @@ export default defineConfig({
     command: 'pnpm dev',
     url: process.env.VITE_BASE_URL,
     reuseExistingServer: !process.env.CI,
+    timeout: 4 * 60 * 1000,
   },
 });
