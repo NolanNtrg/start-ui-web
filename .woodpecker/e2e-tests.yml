@@ -73,3 +73,12 @@ steps:
       - pnpm db:push
       - pnpm db:seed
       - pnpm e2e
+
+  - name: cleanup
+    image: docker:cli
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      - status: [success, failure]
+    commands:
+      - docker system prune -af --volumes
