@@ -82,7 +82,17 @@ steps:
         echo "Postgres is ready."
       - pnpm db:push
       - pnpm db:seed
-      - pnpm e2e
+      - SKIP_ENV_VALIDATION=true pnpm dev &
+      - |
+        echo "Waiting for app server..."
+        timeout=120
+        until curl -sf $VITE_BASE_URL >/dev/null 2>&1; do
+          sleep 2
+          timeout=$((timeout - 2))
+          [ $timeout -le 0 ] && echo "App server timed out" && exit 1
+        done
+        echo "App server is ready."
+      - CI= pnpm e2e
 
   - name: cleanup
     image: docker:cli
