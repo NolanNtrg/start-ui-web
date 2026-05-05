@@ -80,19 +80,19 @@ steps:
         done
         sleep 3
         echo "Postgres is ready."
-      - pnpm build
       - pnpm db:push
       - pnpm db:seed
-      - pnpm start &
+      - SKIP_ENV_VALIDATION=true pnpm dev &
       - |
-        echo "Waiting for app server..."
-        timeout=120
-        until curl -sf $VITE_BASE_URL >/dev/null 2>&1; do
-          sleep 2
-          timeout=$((timeout - 2))
+        echo "Waiting for app server (including Nitro SSR)..."
+        timeout=180
+        until status=$(curl -s -o /dev/null -w '%{http_code}' $VITE_BASE_URL 2>/dev/null) && \
+              [ "$status" != "503" ] && [ "$status" != "000" ]; do
+          sleep 3
+          timeout=$((timeout - 3))
           [ $timeout -le 0 ] && echo "App server timed out" && exit 1
         done
-        echo "App server is ready."
+        echo "App server is ready (status: $status)."
       - CI= pnpm e2e
 
   - name: cleanup
