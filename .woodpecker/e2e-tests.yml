@@ -74,6 +74,8 @@ steps:
         mc anonymous set download minio/$S3_BUCKET_NAME
       - pnpm db:push
       - pnpm db:seed
+      - SKIP_ENV_VALIDATION=true pnpm dev > /tmp/dev-server.log 2>&1 &
+      - sleep 30 && echo "=== dev server output ===" && cat /tmp/dev-server.log && echo "========================"
       - pnpm e2e
 
   - name: cleanup

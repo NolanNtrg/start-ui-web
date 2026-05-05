@@ -7,6 +7,12 @@ steps:
     image: alpine:3.19
     commands:
       - |
+        echo "=== debug ==="
+        echo "CI_COMMIT_TITLE='$CI_COMMIT_TITLE'"
+        echo "CI_COMMIT_MESSAGE='$CI_COMMIT_MESSAGE'"
+        echo "CI_COMMIT_PULL_REQUEST='$CI_COMMIT_PULL_REQUEST'"
+        echo "CI_PIPELINE_EVENT='$CI_PIPELINE_EVENT'"
+        echo "============="
         TITLE="$CI_COMMIT_TITLE"
         PATTERN='^(feat|fix|chore|test|docs)(\(.+\))?: .+$'
 
