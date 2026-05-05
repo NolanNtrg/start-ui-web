@@ -25,6 +25,8 @@ services:
 steps:
   - name: e2e
     image: mcr.microsoft.com/playwright:v1.58.0-noble
+    volumes:
+      - /var/lib/woodpecker-cache/pnpm:/var/lib/woodpecker-cache/pnpm
     environment:
       TMPDIR: /tmp
       VITE_BASE_URL: http://localhost:3000
@@ -47,7 +49,7 @@ steps:
       - git config --global --add safe.directory "$CI_WORKSPACE"
       - corepack enable
       - corepack prepare pnpm@10.33.2 --activate
-      - pnpm config set store-dir /opt/woodpecker/.pnpm-store
+      - pnpm config set store-dir /var/lib/woodpecker-cache/pnpm
       - pnpm install
       - |
         echo "Waiting for postgres..."
