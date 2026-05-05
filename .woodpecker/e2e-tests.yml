@@ -13,6 +13,8 @@ services:
 
   maildev:
     image: maildev/maildev:2.2.1
+    commands:
+      - cd /app && bin/maildev
 
   minio:
     image: minio/minio:RELEASE.2025-07-23T15-54-02Z-cpuv1
