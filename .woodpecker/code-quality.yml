@@ -11,7 +11,7 @@ steps:
       - git config --global --add safe.directory "$CI_WORKSPACE"
       - corepack enable
       - corepack prepare pnpm@10.33.2 --activate
-      - pnpm config set store-dir ~/.pnpm-store
+      - pnpm config set store-dir /opt/woodpecker/.pnpm-store
       - pnpm install
 
   - name: linter
